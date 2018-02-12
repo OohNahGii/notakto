@@ -66,7 +66,7 @@ function Board(num, length) {
 
   this.print_board = function() {
     // Print board name
-    let boardName = 'Board ' + this.num;
+    let boardName = 'Board #' + this.num;
     if (this.is_board_dead()) {
       boardName = boardName + ' (DEAD)';
     }
