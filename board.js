@@ -1,12 +1,18 @@
-function Board(num, length) {
-  this.num = num;
+function Board(name, length) {
+  this.name = name;
   this.length = length;
   this.state = [];
-  // initalize state
+  // Initialize all cells to empty
   for (let index = 0; index < length * length; index++) {
+    // Empty cells are represented as an empty string
     this.state.push('');
   }
   
+  /**
+   * Check if board already contains {length} X's in a row. 
+   * 
+   * @return true if board contains {length} X's in a row, false otherwise
+   */
   this.is_board_dead = function() {
     return has_horizontal(this.length, this.state) || 
       has_vertical(this.length, this.state) || 
@@ -66,16 +72,23 @@ function Board(num, length) {
     });
   }
 
+  /**
+   * Print board and board name.
+   * If a board is dead, the word '(DEAD)' will be printed alongside the board name.
+   * If a cell is empty, the cell index will be printed instead of an empty string. This is intended
+   * to make it easier for players to see which cell indicies are still available.
+   */
   this.print_board = function() {
-    let boardName = 'Board ' + this.num;
+    let boardName = 'Board ' + this.name;
     if (this.is_board_dead()) {
       boardName = boardName + ' (DEAD)';
     }
     process.stdout.write(boardName + '\n');
 
-    // cell value + space before and after cell value, eg. ' X '
+    // A cell contains the cell value ('X' or cellIndex), and a space before and after
     const cellSize = 3; 
-    // 3 cells per row * cell size + number of '|'s
+    // The row separator length is calulated via the following:
+    // # cells per row * cell size + number of column separators
     let separatorLength = this.length * cellSize + (this.length - 1); 
     for (let index = 0; index < this.state.length; index++) {
       // Print row separator after each row
@@ -85,14 +98,22 @@ function Board(num, length) {
       const cellValue = this.state[index] ? this.state[index] : index;
       process.stdout.write(' ' + cellValue + ' ');
       if ((index + 1) % length != 0) {
+        // Print column separator if we are not the last cell in the row
         process.stdout.write('|');
       } else {
+        // Otherwise print newline so we can start a new row
         process.stdout.write('\n');
       }
     }
     process.stdout.write('\n');
   }
 
+  /**
+   * Attempt to place a piece at the specificed cell, returning true if the
+   * attempted move was valid and the update was successful.
+   *
+   * @return true if board was successfully updated, false otherwise
+   */
   this.update_board = function(cellNum) {
     if (this.is_move_valid(cellNum)) {
       this.state[cellNum] = 'X';
@@ -101,6 +122,14 @@ function Board(num, length) {
     return false;
   }
 
+  /**
+   * Determines if a move at the specified cell is valid. A move is considered invalid if:
+   *   - The board is already dead
+   *   - 'cellNum' is outside the bounds of the board
+   *   - There is already a piece at 'cellNum'
+   *
+   * @return true if the move was valid, false otherwise
+   */
   this.is_move_valid = function(cellNum) {
     if (this.is_board_dead()) {
       return false;

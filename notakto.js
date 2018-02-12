@@ -45,19 +45,23 @@ function print_boards(boards) {
 
 function update_boards(boards, input) {
   const values = input.split('-', 2);
+  // Input was not in proper format ({boardNum}-{cellNum})
   if (values.length != 2) {
     return false;
   }
+  // Either boardNum or cellNum is not a number
   if (Number.isNaN(values[0]) || Number.isNaN(values[1])) {
     return false;
   }
   const boardNum = Number.parseInt(values[0], 10);
   const cellNum = Number.parseInt(values[1], 10);
+  // boardNum does not exist
   if (boardNum < 0 || boardNum >= boards.length) {
     return false;
   }
   const boardLength = boards[0].length;
   const numCellsInBoard = boardLength * boardLength;
+  // cellNum is outside the bounds of the board
   if (cellNum < 0 || cellNum >= numCellsInBoard) {
     return false;
   }
