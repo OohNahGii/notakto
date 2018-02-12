@@ -10,6 +10,11 @@ Players can enter their moves in the following format: {boardNum}-{cellNum}. **b
   6 | 7 | 8 
 ```
 
+Program is meant to be ran via the command line using node:
+```
+node notakto.js
+```
+
 Todo: 
 * Implement AI player
 * Allow for a variable number of boards

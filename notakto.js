@@ -14,17 +14,16 @@ function initialize_boards(numBoards, boardLength) {
 }
 
 function perform_turn(boards, currentPlayer, player1, player2) {
-  const next_player = get_next_player(currentPlayer, player1, player2);
   print_boards(boards);
   if (is_game_over(boards)) {
-    console.log('Winner is ' + next_player);
+    console.log('Winner is ' + currentPlayer);
     rl.close();
     return;
   }
 
   rl.question(currentPlayer + ' enter move: ', (answer) => {
     if (update_boards(boards, answer)) {
-      return perform_turn(boards, next_player, player1, player2);
+      return perform_turn(boards, get_next_player(currentPlayer, player1, player2), player1, player2);
     } else {
       console.log('Move [' + answer + '] is invalid.\n');
       return perform_turn(boards, currentPlayer, player1, player2);
@@ -66,7 +65,7 @@ function update_boards(boards, input) {
 }
 
 function get_next_player(current, player1, player2) {
-  return current.name === player1.name ? player2 : player1;
+  return current === player1 ? player2 : player1;
 }
 
 const player1 = 'Player 1';

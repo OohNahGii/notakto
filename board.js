@@ -8,74 +8,77 @@ function Board(num, length) {
   }
   
   this.is_board_dead = function() {
-    return this.has_horizontal() || this.has_vertical() || this.has_diagonal();
+    return has_horizontal(this.length, this.state) || 
+      has_vertical(this.length, this.state) || 
+      has_diagonal(this.length, this.state);
   }
 
-  this.has_horizontal = function() {
-    for (let index = 0; index < this.length * this.length - 1; index = index + this.length) {
-      const row = this.state.slice(index, index + this.length);
-      if (this.is_slice_dead(row)) {
+  function has_horizontal(length, state) {
+    for (let index = 0; index < length * length - 1; index = index +length) {
+      const row = state.slice(index, index + length);
+      if (is_slice_dead(row)) {
         return true;
       }
     }
     return false;
   }
 
-  this.has_vertical = function() {
-    for (let index = 0; index < this.length; index++) {
+  function has_vertical(length, state) {
+    for (let index = 0; index < length; index++) {
       let column = [];
-      for (let row = index; row < this.state.length; row = row + this.length) {
-        column.push(this.state[row]);
+      for (let row = index; row < state.length; row = row + length) {
+        column.push(state[row]);
       }
-      if (this.is_slice_dead(column)) {
+      if (is_slice_dead(column)) {
         return true;
       }
     }
     return false;
   }
 
-  this.has_diagonal = function() {
-    const leftDistance = this.length + 1;
-    const rightDistance = this.length - 1;
+  function has_diagonal(length, state) {
+    const leftDistance = length + 1;
+    const rightDistance = length - 1;
     
     // top-left to bottom-right
     let topLeft = [];
-    for (let index = 0; index < this.state.length; index = index + leftDistance) {
-      topLeft.push(this.state[index]);
+    for (let index = 0; index < state.length; index = index + leftDistance) {
+      topLeft.push(state[index]);
     }
-    if (this.is_slice_dead(topLeft)) {
+    if (is_slice_dead(topLeft)) {
       return true;
     }
 
     // top-right to bottom-left
     let topRight = [];
-    for (let index = rightDistance; index < this.state.length - 1; index = index + rightDistance) {
-      topRight.push(this.state[index]);
+    for (let index = rightDistance; index < state.length - 1; index = index + rightDistance) {
+      topRight.push(state[index]);
     }
-    if (this.is_slice_dead(topRight)) {
+    if (is_slice_dead(topRight)) {
       return true;
     }
     return false;
   }
 
-  this.is_slice_dead = function(slice) {
+  function is_slice_dead(slice) {
     return slice.every(cell => {
       return cell;
     });
   }
 
   this.print_board = function() {
-    // Print board name
-    let boardName = 'Board #' + this.num;
+    let boardName = 'Board ' + this.num;
     if (this.is_board_dead()) {
       boardName = boardName + ' (DEAD)';
     }
     process.stdout.write(boardName + '\n');
 
-    // Print board
-    const cellSize = 3; // cell value + space before and after cell value, eg. ' X '
-    let separatorLength = this.length * cellSize + (this.length - 1); // 3 cells per row * cell size + number of '|'s
+    // cell value + space before and after cell value, eg. ' X '
+    const cellSize = 3; 
+    // 3 cells per row * cell size + number of '|'s
+    let separatorLength = this.length * cellSize + (this.length - 1); 
     for (let index = 0; index < this.state.length; index++) {
+      // Print row separator after each row
       if (index > 0 && index % length == 0) {
         process.stdout.write('-'.repeat(separatorLength) + '\n');
       }
