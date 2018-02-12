@@ -73,8 +73,8 @@ function Board(num, length) {
     process.stdout.write(boardName + '\n');
 
     // Print board
-    const cellSize = 3; // eg. ' X '
-    let separatorLength = this.length * cellSize + (this.length - 1);
+    const cellSize = 3; // cell value + space before and after cell value, eg. ' X '
+    let separatorLength = this.length * cellSize + (this.length - 1); // 3 cells per row * cell size + number of '|'s
     for (let index = 0; index < this.state.length; index++) {
       if (index > 0 && index % length == 0) {
         process.stdout.write('-'.repeat(separatorLength) + '\n');
